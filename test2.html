@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>training</title>
+</head>
+<body>
+    <input type="text" id="testing"></input><button id="nq">next</button><a href="http://jpeasy.ddns.net/index.html">Exit</a>
+    <br>
+    <span id="word"></span>
+    <br>
+    <div id="text">
+      <span id="a"></span><span id="b"></span><span id="c"></span><span id="d"></span><span id="e"></span><span id="f"></span>
+    </div>
+    <style>
+      body {
+        background: #000000;
+        font-family:'Trebuchet MS', sans-serif;
+      }
+      #text{
+        padding-top: 0px;
+        padding-bottom: 0px;
+        background: linear-gradient(to top, #0000ff, #ee00ff);
+        display: inline-block;
+      }
+      span {
+        margin-right: 6px;
+        font-size: 30px;
+        color: #ffffff;
+        background: #000000;
+        position: relative;
+      }
+    </style>
+    <script>
+      var corrects = [];
+      var wrongs = [];
+      var translation;
+      var accent;
+      const trainingWords = JSON.parse(localStorage.getItem('jpeasytrainingWords'));
+      const words = "^あ\\う_ 会う to meet;^あ\\お_ 青 blue;_あ/お\\い_ 青い blue;^あ\\か_ 赤 red;_あ/か\\い_ 赤い red;_あ/かる\\い_ 明るい bright;^あ\\き_ 秋 autumn;_あ/く^ 開く to be opened;_あ/ける_ 開ける to open;_あ/げる_ 上げる to give;^あ\\さ_ 朝 morning;_あ/さご\\はん_ 朝御飯 breakfast;_あ/さ\\って_ - day after tomorrow;_あ/し_ 足 leg;_あ/した_ 明日 tomorrow;_あ/そこ^ - that place;_あ/そぶ^ 遊ぶ to play;_あ/たたか\\い_ 暖かい warm;_あ/た\\ま_ 頭 head;_あ/たらし\\い_ 新しい new;_あ/ちら^ - there;_あ/つ\\い_ 暑い hot;_あ/つ\\い_ 熱い hot to the touch;_あ/つい^ 厚い kind, thick, deep;_あ/っち_ - over there;^あ\\と_ 後 afterwards;_あ/な\\た_ - you;^あ\\に_ 兄 (humble) older brother;_あ/ね^ 姉 (humble) older sister;_あ/の^ - that (thing);_あの..._ - um;_ア/パ\\ート_ - apartment;_あ/びる^ - to bathe;_あ/ぶない^ 危ない dangerous;_あ/まい^ 甘い sweet;_あ/まり_ - not very;^あ\\め_ 雨 rain;_あ/め^ 飴 candy;_あ/らう^ 洗う to wash;^あ\\る_ [存在] to be (inanimate);^あ\\る_ [所有] to have;_あ/る\\く_ 歩く to walk;_あ/れ^ - that thing;^い\\い_ (よい) good;_い/いえ_ - no;_い/う^ 言う to say;_い/え_ 家 house;_い/か\\が_ - in what way;_い/く^ 行く to go;^い\\くつ_ - how many;^い\\くら_ - how much;_い/け_ 池 pond;_い/しゃ^ 医者 doctor;_い/す^ - chair;_い/そがし\\い_ 忙しい busy, irritated;_い/た\\い_ 痛い painful;_い/ち_ 一 one;_い/ちにち_ 一日 1 day, first day of the month;_い/ちばん^ 一番 best;^い\\つ_ - when;_い/つか^ 五日 five days, fifth day of the month;_い/っしょ^ 一緒 together;_い/つ\\つ_ 五つ five (amount);^い\\つも_ - always;_い/ぬ_ 犬 dog;^い\\ま_ 今 now;^い\\み_ 意味 meaning;_い/もうと_ 妹 younger sister;_い/や_ 嫌 unpleasant;_い/りぐち^ 入口 entrance;_い/る^ 居る to be (animate);_い/る^ 要る to need;_い/れる^ 入れる to put in;_い/ろ_ 色 color;_い/ろいろ^ - various;_う/え^ 上 on top of, above;_う/しろ^ 後ろ behind;_う/すい^ 薄い thin, weak;_う/た_ 歌 song;_う/たう^ 歌う to sing;_う/ち^ - house (one's own);_う/まれる^ 生まれる to be born;^う\\み_ 海 sea;_う/る^ 売る to sell;_う/るさ\\い_ - noisy, loud, annoying;_う/わぎ^ 上着 jacket;^え_ 絵 picture;_え/いが^ 映画 movie;_え/いが\\かん_ 映画館 cinema;_え/いご^ 英語 English language;^え\\え_ - yes;^え\\き_ 駅 station;_エ/レベ\\ーター_ - elevator;^え\\ん_ 円 yen;_え/んぴつ^ 鉛筆 pencil;_お/いしい^ - delicious;^お\\おい_ 多い many;_お/おき\\い_ 大きい big;^お\\おきな_ 大きな big;_お/おぜ\\い_ 大勢 many people;_お/か\\あさん_ お母さん (honorable) mother;_お/か\\し_ お菓子 sweets, candy;_お/かね^ お金 money;_お/き\\る_ 起きる to get up, to rise;_お/く^ 置く to put;^お\\くさん_ 奥さん (honorable) wife;_お/さけ^ お酒 alcohol, rice wine;_お/さら^ お皿 plate, dish;_お/じさん^ 伯父/叔父さん uncle, middle aged man;_お/じ\\いさん_ - grandfather, male senior citizen;_お/しえる^ 教える to teach;_お/す^ 押す to push, to press;_お/そい^ 遅い late, slow;_お/ちゃ^ お茶 (green) tea;_お/てあ\\らい_ お手洗い bathroom;_お/と\\うさん_ お父さん (honorable) father;_お/とうと_ 弟 younger brother;_お/とこ_ 男 man;_お/とこ\\のこ_ 男の子 boy;_お/とと\\い_ 一昨日 day before yesterday;_お/と\\とし_ 一昨年 year before last;_お/とな^ 大人 adult;_お/なか^ - stomach;_お/なじ^ 同じ same;_お/に\\いさん_ お兄さん older brother;_お/ね\\えさん_ お姉さん older sister;_お/ばさん^ 伯母さん/叔母さん aunt;_お/ば\\あさん_ - grandmother, female senior citizen;_お/ふ\\ろ_ お風呂 bath;_お/べんとう^ お弁当 boxed lunch;_お/ぼえ\\る_ 覚える to remember;_お/ま\\わりさん_ - policeman (friendly term);_お/もい^ 重い heavy;_お/もしろ\\い_ - interesting;_お/よ\\ぐ_ 泳ぐ to swim;_お/り\\る_ 降りる to get off;_お/わる^ 終る to finish, to close;^お\\んがく_ 音楽 music;_お/んな_ 女 woman;_お/んな\\のこ_ 女の子 girl;^か\\い_ 回 occurences (counter);^か\\い_ 階 floors (counter);_が/いこく^ 外国 foreign country;_が/いこく\\じん_ 外国人 foreigner;_か/いしゃ^ 会社 company;_か/いだん^ 階段 stairs;_か/いもの^ 買い物 shopping;_か/う^ 買う to buy;^か\\えす_ 返す to return something;^か\\える_ 帰る to go home, to return;_か/お^ 顔 face (of a person);_か/か\\る_ - to take time, money;_か/ぎ_ - key;^か\\く_ 書く to write;_が/くせい^ 学生 student;^か\\げつ_ か月 months (counter);_か/け\\る_ - to put on (eg glasses);_か/け\\る_ - to call;^か\\さ_ 傘 umbrella;_か/す^ 貸す to lend;_か/ぜ^ 風 wind, breeze;_か/ぜ^ 風邪 cold, illness;_か/た_ 方 person;^か\\ぞく_ 家族 family;_か/たか\\な_ 片仮名 katakana;^がつ_ 月 month of the year (suffix);_が/っこう^ 学校 school;^カ\\ップ_ - cup;_か/てい^ 家庭 household;^か\\ど_ 角 corner;_か/ばん^ - bag, briefcase;_か/びん^ 花瓶 vase;_か/ぶ\\る_ - to wear, to put on (head);_か/み_ 紙 paper;^カ\\メラ_ - camera;_か/よ\\うび_ 火曜日 tuesday;_か/ら\\い_ 辛い spicy;_か/らだ^ 体 body;_か/りる^ 借りる to borrow, to have a loan;_か/るい^ 軽い light, non-serious, minor;_カ/レー^ - curry;_カ/レ\\ンダー_ - calendar;_か/わ_ 川/河 river;_が/わ^ 側 side (suffix);_か/わい\\い_ 可愛い cute;_か/んじ^ 漢字 chinese character;^き_ 木 tree, wood;_き/いろ^ 黄色 yellow;_き/いろい^ 黄色い yellow;_き/える^ 消える to disappear;_き/く^ 聞く to hear, to listen, to ask;_き/た^ 北 north;^ギ\\ター_ - guitar;_き/たな\\い_ 汚い dirty, messy;_き/っさてん^ 喫茶店 coffee lounge;_き/って^ 切手 stamp (eg postage);_き/っぷ^ 切符 ticket;_き/の\\う_ 昨日 yesterday;^きゅ\\う_ 九 nine;ぎゅうにく 牛肉 beef;ぎゅうにゅう 牛乳 milk;きょう 今日 today;きょうしつ 教室 classroom;きょうだい 兄弟 siblings;きょねん 去年 last year;きらい 嫌い dislike, hate;きる 切る to cut;きる 着る to wear, to put on (from shoulders down);きれい - pretty, clean, nice, tidy;キログラム (キロ) kilogram;キロメートル (キロ) kilometre ;ぎんこう 銀行 bank;きんようび 金曜日 Friday;く 九 nine;くすり 薬 medicine;ください - please;くだもの 果物 fruit;くち 口 mouth, opening;くつ 靴 shoes;くつした 靴下 socks;くに 国 country;くもり 曇り cloudiness, cloudy weather;くもる 曇る to become cloudy, to become dim;くらい 暗い dark, gloomy;くらい (ぐらい) approximate (quantity) (suffix);クラス - class;グラム - gram;くる 来る to come;くるま 車 car, vehicle;くろ 黒 black;くろい 黒い black;けいかん 警官 policeman;けさ 今朝 this morning;けす 消す to erase, to delete;けっこう 結構 nice, enough;けっこん 結婚 marriage (suru verb);げつようび 月曜日 monday;げんかん 玄関 entrance-way, entry hall;げんき 元気 fine, health;こ 個 small things (counter);ご 五 five;ご 語 language (suffix);こうえん 公園;こうさてん 交差点;こうちゃ 紅茶;こうばん 交番;こえ 声;コート ;コーヒー ;ここ ;ごご 午後;ここのか 九日;ここのつ 九つ;ごぜん 午前;こたえる 答える;こちら ;こっち ;コップ ;ことし 今年;ことば 言葉;こども 子供;この ;ごはん 御飯;コピーする ;こまる 困る;これ ;ころ/ごろ ;こんげつ 今月;こんしゅう 今週;こんな ;こんばん 今晩;さあ ;さい 歳;さいふ 財布;さかな 魚;さき 先;さく 咲く;さくぶん 作文;さす 差す;さつ 冊;ざっし 雑誌;さとう 砂糖;さむい 寒い;さらいねん さ来年;さん ;さん 三;さんぽ（する） 散歩;し 四;じ 時;しお 塩;しかし ;じかん 時間;じかん 時間;しごと 仕事;じしょ 辞書;しずか 静か;した 下;しち 七;しつもん 質問;じてんしゃ 自転車;じどうしゃ 自動車;しぬ 死ぬ;じびき 字引;じぶん 自分;しまる 閉まる;しめる 閉める;しめる 締める;じゃ/じゃあ ;しゃしん 写真;シャツ ;シャワー ;じゅう 十;じゅう 中;しゅうかん 週間;じゅぎょう 授業;しゅくだい 宿題;じょうず 上手;じょうぶ 丈夫;しょうゆ ;しょくどう 食堂;しる 知る;しろ 白;しろい 白い;にん 人;しんぶん 新聞;すいようび 水曜日;すう 吸う;スカート ;すき 好き;すぎ ;すくない 少ない;すぐに ;すこし 少し;すずしい 涼しい;ずつ ;ストーブ ;スプーン ;スポーツ ;ズボン ;すむ 住む;スリッパ ;する ;すわる 座る;せい 背;せいと 生徒;セーター ;せっけん 石鹸;せびろ 背広;せまい 狭い;ゼロ ;せん 千;せんげつ 先月;せんしゅう 先週;せんせい 先生;せんたく 洗濯;ぜんぶ 全部;そう/そうです ;そうじ（する） 掃除;そうして/そして ;そこ ;そちら ;そっち ;そと 外;その ;そば ;そら 空;それ ;それから ;それでは ;だい 台;だいがく 大学;たいしかん 大使館;だいじょうぶ 大丈夫;だいすき 大好き;たいせつ 大切;だいどころ 台所;たいへん ;たいへん ;たかい 高い;たかい 高い;だけ ;たくさん ;タクシー ;だす 出す;たち ;たつ 立つ;たて ;たてもの 建物;たのしい 楽しい;たのむ 頼む;たばこ ;たぶん ;たべもの 食べ物;たべる 食べる;たまご 卵;だれ 誰;だれか 誰か;たんじょうび 誕生日;だんだん ;ちいさい 小さい;ちいさな 小さな;ちかい 近い;ちがう 違う;ちかく 近く;ちかてつ 地下鉄;ちず 地図;ちち 父;ちゃいろ 茶色;ちゃわん ;ちゅう 中;ちょうど ;ちょっと ;ついたち 一日;つかう 使う;つかれる 疲れる;つぎ 次;つく 着く;つくえ 机;つくる 作る;つける ;つとめる 勤める;つまらない ;つめたい 冷たい;つよい 強い;て 手;テープ ;テープレコーダー ;テーブル ;でかける 出かける;てがみ 手紙;できる ;でぐち 出口;テスト ;では ;デパート ;でも ;でる 出る;テレビ ;てんき 天気;でんき 電気;でんしゃ 電車;でんわ 電話;と 戸;ど 度;ドア ;トイレ ;どう ;どうして ;どうぞ ;どうぶつ 動物;どうも ;とお 十;とおい 遠い;とおか 十日;とき 時;ときどき 時々;とけい 時計;どこ ;ところ 所;とし 年;としょかん 図書館;どちら ;どっち ;とても ;どなた ;となり 隣;どの ;とぶ 飛ぶ;とまる 止まる;ともだち 友達;どようび 土曜日;とり 鳥;とりにく とり肉;とる 取る;とる 撮る;どれ ;どんな ;ない ;ナイフ ;なか 中;ながい 長い;ながら ;なく 鳴く;なくす 無くす;なぜ ;なつ 夏;なつやすみ 夏休み;など ;ななつ 七つ;なん/なに 何;なのか 七日;なまえ 名前;ならう 習う;ならぶ 並ぶ;ならべる 並べる;なる ;なん 何;に 二;にぎやか ;にく 肉;にし 西;にち 日;にちようび 日曜日;にもつ 荷物;ニュース ;にわ 庭;にん 人;ぬぐ 脱ぐ;ぬるい 温い;ネクタイ ;ねこ 猫;ねる 寝る;ねん 年;ノート ;のぼる 登る;のみもの 飲み物;のむ 飲む;のる 乗る;は 歯;パーティー ;はい ;はい 杯;はいざら 灰皿;はいる 入る;はがき 葉書;はく ;はこ 箱;はし 橋;はし ;はじまる 始まる;はじめ 初め/始め;はじめて 初めて;はしる 走る;バス ;バター ;はたち 二十歳;はたらく 働く;はち 八;はつか 二十日;はな 花;はな 鼻;はなし 話;はなす 話す;はは 母;はやい 早い;はやい 速い;はる 春;はる 貼る;はれ 晴れ;はれる 晴れる;はん 半;ばん 晩;ばん 番;パン ;ハンカチ ;ばんごう 番号;ばんごはん 晩御飯;はんぶん 半分;ひがし 東;ひき 匹;ひく 引く;ひく 弾く;ひくい 低い;ひこうき 飛行機;ひだり 左;ひと 人;ひとつ 一つ;ひとつき 一月;ひとり 一人;ひま 暇;ひゃく 百;びょういん 病院;びょうき 病気;ひらがな 平仮名;ひる 昼;ひるごはん 昼御飯;ひろい 広い;フィルム ;ふうとう 封筒;プール ;フォーク ;ふく 吹く;ふく 服;ふたつ 二つ;ぶたにく 豚肉;ふたり 二人;ふつか 二日;ふとい 太い;ふゆ 冬;ふる 降る;ふるい 古い;ふろ ;ふん 分;ぶんしょう 文章;ページ ;へた 下手;ベッド ;ペット ;へや 部屋;へん 辺;ペン ;べんきょう（する） 勉強;べんり 便利;ほう ;ぼうし 帽子;ボールペン ;ほか 外;ポケット ;ほしい 欲しい;ポスト ;ほそい 細い;ボタン ;ホテル ;ほん 本;ほん 本;ほんだな 本棚;ほんとう ;まい 枚;まいあさ 毎朝;まいげつ/まいつき 毎月;まいしゅう 毎週;まいにち 毎日;まいねん/まいとし 毎年;まいばん 毎晩;まえ 前;まえ 前;まがる 曲る;まずい ;また ;まだ ;まち 町;まつ 待つ;まっすぐ ;マッチ ;まど 窓;まるい 丸い/円い;まん 万;まんねんひつ 万年筆;みがく 磨く;みぎ 右;みじかい 短い;みず 水;みせ 店;みせる 見せる;みち 道;みっか 三日;みっつ 三つ;みどり 緑;みなさん 皆さん;みなみ 南;みみ 耳;みる 見る;みんな ;むいか 六日;むこう 向こう;むずかしい 難しい;むっつ 六つ;むら 村;め 目;メートル ;めがね 眼鏡;もう ;もう ;もくようび 木曜日;もしもし ;もつ 持つ;もっと ;もの 物;もん 門;もんだい 問題;や 屋;やおや 八百屋;やさい 野菜;やさしい 易しい;やすい 安い;やすみ 休み;やすむ 休む;やっつ 八つ;やま 山;やる ;ゆうがた 夕方;ゆうはん 夕飯;ゆうびんきょく 郵便局;ゆうべ 昨夜;ゆうめい 有名;ゆき 雪;ゆっくりと ;ようか 八日;ようふく 洋服;よく ;よく ;よこ 横;よっか 四日;よっつ 四つ;よぶ 呼ぶ;よむ 読む;よる 夜;よわい 弱い;らいげつ 来月;らいしゅう 来週;らいねん 来年;ラジオ ;ラジカセ ;りっぱ ;りゅうがくせい 留学生;りょうしん 両親;りょうり 料理;りょこう 旅行;れい 零;れいぞうこ 冷蔵庫;レコード ;レストラン ;れんしゅう（する） 練習;ろうか 廊下;ろく 六;ワイシャツ ;わかい 若い;わかる 分かる;わすれる 忘れる;わたし 私;わたくし 私;わたす 渡す;わたる 渡る;わるい 悪い  ";
+      function loadword(ind,t) {
+        translation = "";
+        for(i = 2; i < words.split(";")[ind].split(" ").length; i++) {
+          translation += words.split(";")[ind].split(" ")[i] + " ";
+        }
+        accent = ""
+        var lh = words.split(";")[ind].charAt(0)=='^';
+        for(i = 1; i < words.split(";")[ind].split(" ")[0].length; i++) {
+          if(words.split(";")[ind].split(" ")[0].charAt(i)=='/') {
+            lh = true;
+          }
+          else if(words.split(";")[ind].split(" ")[0].charAt(i)=='\\') {
+            lh = false;
+          }
+          else if(i==words.split(";")[ind].split(" ")[0].length-1) {
+            if(lh&&words.split(";")[ind].split(" ")[0].charAt(i)=="_") {
+              accent += "|";
+            }
+            if(!lh&&words.split(";")[ind].split(" ")[0].charAt(i)=="^") {
+              accent += "|";
+            }
+          }
+          else {
+            accent += lh ? "^" : "_";
+          }
+        }
+        if(t=="e") {
+          document.getElementById("word").innerHTML = translation;
+          document.getElementById("text").style.visibility = "hidden";
+        }
+        else {
+          document.getElementById("text").style.visibility = "visible";
+          const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+          var text = words.split(";")[ind].split(" ")[0];
+          document.getElementById("word").innerHTML = words.split(";")[ind].split(" ")[1];
+          var lh;
+          for(i = 0; i < 6; i++) {
+            document.getElementById(alphabet.charAt(i)).style.paddingTop = "0px";
+            document.getElementById(alphabet.charAt(i)).style.paddingBottom = "0px";
+            document.getElementById(alphabet.charAt(i)).style.paddingRight = "0px";
+            document.getElementById(alphabet.charAt(i)).style.marginRight = "6px";
+            document.getElementById(alphabet.charAt(i)).innerHTML = "";
+            document.getElementById(alphabet.charAt(j)).style.color = "#000000";
+          }
+          if (text.charAt(0) == '_') {
+            lh = false;
+          }
+          else {
+            lh = true;
+          }
+          var j = 0;
+          for (var i = 1; i < text.length-1; i++) {
+            if (text.charAt(i) !='_' && text.charAt(i) != '/' && text.charAt(i) != '\\' && text.charAt(i) != '^' && text.charAt(i) != '|') {
+              document.getElementById(alphabet.charAt(j)).innerHTML = text.charAt(i);
+              document.getElementById(alphabet.charAt(j)).style.color = "#ffffff";
+              if (lh) {
+                document.getElementById(alphabet.charAt(j)).style.paddingBottom = "8px";
+              }
+              else {
+                document.getElementById(alphabet.charAt(j)).style.paddingTop = "8px";
+              }
+              if (text.charAt(i+1) != '/' && text.charAt(i+1) != '\\' && text.charAt(i+1) != '_' && text.charAt(i+1) != '^') {
+                document.getElementById(alphabet.charAt(j)).style.paddingRight = "6px";
+                document.getElementById(alphabet.charAt(j)).style.marginRight = "0px";
+              }
+              if (i == text.length-2) {
+                if (lh && text.charAt(text.length-1) == '^') {
+                  document.getElementById(alphabet.charAt(j)).style.paddingRight = "6px";
+                  document.getElementById(alphabet.charAt(j)).style.marginRight = "0px";
+                }
+                if (lh == false && text.charAt(text.length-1) == '_') {
+                  document.getElementById(alphabet.charAt(j)).style.paddingRight = "6px";
+                  document.getElementById(alphabet.charAt(j)).style.marginRight = "0px";
+                }
+              }
+              j++;
+            }
+            else {
+              if (text.charAt(i) == '/') {
+                lh = true;
+              }
+              else if (text.charAt(i) == '\\') {
+                lh = false;
+              }
+            }
+          }
+          for(i = 0; i < 6; i++) {
+            if(document.getElementById(alphabet.charAt(i)).innerHTML == "") {
+              document.getElementById(alphabet.charAt(i)).style.paddingTop = "8px";
+              document.getElementById(alphabet.charAt(i)).style.paddingBottom = "8px";
+              document.getElementById(alphabet.charAt(i)).style.marginRight = "0px";
+              document.getElementById(alphabet.charAt(i)).style.color = "#000000";
+              document.getElementById(alphabet.charAt(i)).innerHTML = "タ";
+            }
+          }
+          document.getElementById("text").style.background = "linear-gradient(to top, #0000ff, #ee00ff)";
+          if(t=="a") {
+            document.getElementById("text").style.background = "#000000";
+          }
+        }
+      }
+      convertfrom = ["あ","い","う","え","お","か","き","く","け","こ","が","ぎ","ぐ","げ","ご","さ","し","す","せ","そ","ざ","じ","ず","ぜ","ぞ","た","ち","つ","て","と","だ","ぢ","づ","で","ど","な","に","ぬ","ね","の","は","ひ","ふ","へ","ほ","ば","び","ぶ","べ","ぼ","ぱ","ぴ","ぷ","ぺ","ぽ","ま","み","む","め","も","や","ゆ","よ","ら","り","る","れ","ろ","わ","を","ん","shiゃ","shiゅ","shiょ","chiゃ","chiゅ","chiょ","iゃ","iゅ","iぇ","iょ","っk","っg","っs","っz","っt","っd","っc","っh","っf","っb","っp","っr","っm","っn"];
+      convertto = ["a","i","u","e","o","ka","ki","ku","ke","ko","ga","ki","gu","ge","go","sa","shi","su","se","so","za","ji","zu","ze","zo","ta","chi","tsu","te","to","da","ji","zu","de","do","na","ni","nu","ne","no","ha","hi","fu","he","ho","ba","bi","bu","be","bo","pa","pi","pu","pe","po","ma","mi","mu","me","mo","ya","yu","yo","ra","ri","ru","re","ro","wa","wo","n","sha","shu","sho","cha","chu","cho","ya","yu","ye","yo","kk","gg","ss","zz","tt","dd","cc","hh","ff","bb","pp","rr","mm","nn"];
+      loadword(parseInt(trainingWords[0].replace("e","").replace("j","").replace("a","")),trainingWords[0].charAt(trainingWords[0].length-1));
+      var tw = 0;
+      var c = false;
+      document.getElementById("nq").addEventListener("click", function(event) {
+        if(tw == trainingWords.length && !c) return;
+        if(c) {
+          c = false;
+          if(tw!=trainingWords.length) {
+            loadword(parseInt(trainingWords[tw].replace("e","").replace("j","").replace("a","")),trainingWords[tw].charAt(trainingWords[tw].length-1));
+          }
+          else {
+            document.getElementById("word").innerHTML = "Quiz finished!";
+            document.getElementById("text").innerHTML = corrects.length+"/"+trainingWords.length+" questions correct";
+            document.getElementById("text").style.visibility = "visible";
+            document.getElementById("text").style.background = "linear-gradient(to top, #0000ff, #ee00ff)";
+            jpeasy = localStorage.getItem("jpeasy");
+            var boxes = ["0259","1360","2471","3582","4693","5704","6815","7926","8037","9148"];
+            for(i = 0; i < wrongs.length; i++) {
+              jpeasy = jpeasy.replace(wrongs[i]+",", "");
+            }
+            jpeasy = jpeasy.split(";");
+            for(i = 0; i < boxes.length; i++) {
+              if(boxes[i].charAt(0) == localStorage.getItem("jpeasysession")) {
+                for(j = 0; j < jpeasy[0].length/6; j++) {
+                  jpeasy[parseInt(boxes[i].charAt(0))+1] = jpeasy[parseInt(boxes[i].charAt(0))+1] + jpeasy[0].split(",")[j] + ",";
+                }
+                jpeasy[0] = "";
+              }
+            }
+            for(i = 0; i < wrongs.length; i++) {
+              jpeasy[0] = jpeasy[0] + wrongs[i] + ",";
+            }
+            var boxes = ["0259","1360","2471","3582","4693","5704","6815","7926","8037","9148"];
+            for(i = 0; i < boxes.length; i++) {
+              if(boxes[i].charAt(boxes[i].length-1) == localStorage.getItem("jpeasysession")) {
+                for(j = 0; j < jpeasy[i+1].length/6; j++) {
+                  jpeasy[11] = jpeasy[11] + jpeasy[i+1].split(",")[j] + ",";
+                }
+                jpeasy[i+1] = "";
+              }
+            }
+            jpeasy = jpeasy.join(";");
+            localStorage.setItem("jpeasy",jpeasy);
+          }
+        }
+        else if(trainingWords[tw].charAt(trainingWords[0].length-1)=='e') {
+          var gw = words.split(";")[parseInt(trainingWords[tw].replace("e","").replace("j","").replace("a",""))].split(" ")[0].replaceAll("\\","").replaceAll("/","").replaceAll("_","").replaceAll("^","");
+          for(j = 0; j < convertto.length; j++) {
+            gw = gw.replaceAll(convertfrom[j], convertto[j]);
+          }
+          if(gw.includes(document.getElementById("testing").value) && document.getElementById("testing").value.length >= 3 || document.getElementById("testing").value == gw) {
+            document.getElementById("word").innerHTML = "Correct";
+            corrects.push(trainingWords[tw]);
+          }
+          else {
+            document.getElementById("word").innerHTML = "Wrong :( Correct answer: " + gw;
+            wrongs.push(trainingWords[tw]);
+          }
+          document.getElementById("text").style.visibility = "hidden";
+          tw++;
+          c = true;
+        }
+        else if(trainingWords[tw].charAt(trainingWords[0].length-1)=='a') {
+          if(document.getElementById("testing").value == accent) {
+            document.getElementById("word").innerHTML = "Correct";
+            corrects.push(trainingWords[tw]);
+          }
+          else {
+            document.getElementById("word").innerHTML = "Wrong :( Correct answer: " + accent;
+            wrongs.push(trainingWords[tw]);
+          }
+          document.getElementById("text").style.visibility = "hidden";
+          tw++;
+          c = true;
+        }
+        else {
+          if(translation.includes(document.getElementById("testing").value) && document.getElementById("testing").value.length >= 3 || document.getElementById("testing").value == translation) {
+            document.getElementById("word").innerHTML = "Correct";
+            corrects.push(trainingWords[tw]);
+          }
+          else {
+            document.getElementById("word").innerHTML = "Wrong :( Correct answer: " + translation;
+            wrongs.push(trainingWords[tw]);
+          }
+          document.getElementById("text").style.visibility = "hidden";
+          tw++;
+          c = true;
+        }
+        document.getElementById("testing").value = "";
+      });
+    </script>
+</body>
+</html>

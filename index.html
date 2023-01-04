@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+</head>
+<body>
+  <button id="button">Start Session</button><button id="reset">Reset Data</button>
+  <br>
+  <button id="addquestions">Add</button><span> Questions from</span>
+  <br>
+  <input type="text" id="frommany"></input>
+  <br>
+  <span>to</span>
+  <br>
+  <input type="text" id="howmany"></input>
+  <br>
+  <a href="http://jpeasy.ddns.net/test.html">Search</a>
+  <style>
+    body {
+      background: #000000;
+      font-family:'Trebuchet MS', sans-serif;
+    }
+    span {
+      color: #ffffff;
+    }
+  </style>
+  <script>
+    var boxes = ["0259","1360","2471","3582","4693","5704","6815","7926","8037","9148"];
+    if(localStorage.getItem("jpeasy")==null) {
+      localStorage.setItem("jpeasy",";;;;;;;;;;;");
+    }
+    if(localStorage.getItem("jpeasysession")==null) {
+      localStorage.setItem("jpeasy","-1");
+    }
+    document.getElementById("addquestions").addEventListener("click", event => {
+        jpeasy = localStorage.getItem("jpeasy");
+        jpeasy = jpeasy.split(";");
+        for(i = parseInt(document.getElementById("frommany").value)-1; i < parseInt(document.getElementById("howmany").value); i++) {
+            currentquestion = i.toString();
+            len = currentquestion.length;
+            for(j = 0; j < 4-len; j++) {
+                currentquestion =  "0" + currentquestion;
+                console.log(currentquestion);
+            }
+            if(!jpeasy.join(";").includes(jpeasy[0] = jpeasy[0] + currentquestion + "e,")) {
+                jpeasy[0] = jpeasy[0] + currentquestion + "e,";
+            }
+            if(!jpeasy.join(";").includes(jpeasy[0] = jpeasy[0] + currentquestion + "j,")) {
+                jpeasy[0] = jpeasy[0] + currentquestion + "j,";
+            }
+            if(!jpeasy.join(";").includes(jpeasy[0] = jpeasy[0] + currentquestion + "a,")) {
+                jpeasy[0] = jpeasy[0] + currentquestion + "a,";
+            }
+        }
+        jpeasy = jpeasy.join(";");
+        console.log(jpeasy);
+        localStorage.setItem("jpeasy", jpeasy);
+    });
+    document.getElementById("reset").addEventListener("click", event => {
+        localStorage.setItem("jpeasy",";;;;;;;;;;;");
+        localStorage.setItem("jpeasysession","-1");
+    });
+    document.getElementById("button").addEventListener("click", event => {
+        if(localStorage.getItem("jpeasysession")!="9") {
+            localStorage.setItem("jpeasysession",(parseInt(localStorage.getItem("jpeasysession"))+1).toString());
+        }
+        else {
+            localStorage.setItem("jpeasysession","0")
+        }
+        tws = [];
+        jpeasy = localStorage.getItem("jpeasy").split(";");
+        for(i = 0; i < jpeasy[0].length/6; i++) {
+          tws.push(jpeasy[0].split(",")[i]);
+        }
+        for(i = 0; i < 10; i++) {
+          if(boxes[i].includes(localStorage.getItem("jpeasysession"))) {
+            for(j = 0; j < jpeasy[i+1].length/6; j++) {
+                tws.push(jpeasy[i+1].split(",")[j]);
+            }
+          }
+        }
+        if(tws.length == 0) {
+            return;
+        }
+        localStorage.setItem("jpeasytrainingWords",JSON.stringify(tws));
+        window.location = 'http://jpeasy.ddns.net/test2.html';
+    });
+  </script>
+</body>
+</html>
