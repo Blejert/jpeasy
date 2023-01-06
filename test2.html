@@ -54,14 +54,14 @@
           }
           else if(i==words.split(";")[ind].split(" ")[0].length-1) {
             if(lh&&words.split(";")[ind].split(" ")[0].charAt(i)=="_") {
-              accent += "|";
+              accent += "d";
             }
             if(!lh&&words.split(";")[ind].split(" ")[0].charAt(i)=="^") {
-              accent += "|";
+              accent += "d";
             }
           }
           else {
-            accent += lh ? "^" : "_";
+            accent += lh ? "h" : "l";
           }
         }
         if(t=="e") {
