@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cookies - jpeasy</title>
+</head>
+<body>
+    <br><br><br><br><br><br>
+    <span id="title">This website uses cookies, by clicking this button, you accept the use of cookies on the site.</span>
+    <br><br>
+    <button id="site">Go to the site</button>
+</body>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #1e1e1e, #232323);
+            text-align: center;
+            color: #ffffff;
+            font-family:'Trebuchet MS', sans-serif;
+        }
+        #site {
+            width: 40%;
+            height: 9vw;
+            display: block;
+            margin: auto;
+            border: none;
+            color: #ffffff;
+            background-image: linear-gradient(30deg, #0400ff, #4ce3f7);
+            border-radius: 20px;
+            background-size: 100% auto;
+            font-family: inherit;
+            font-size: 3vw;
+        }
+        #title {
+            font-size: 2vw;
+        }
+        @media(max-width: 1000px) {
+            #title {
+                font-size: 5vw;
+            }
+            #site {
+                width: 80%;
+                height: 12vw;
+                font-size: 5vw;
+            }
+        }
+    </style>
+    <script>
+        if(localStorage.getItem("jpeasy")!=null) {
+            window.location = 'http://jpeasy.ddns.net/main.html';
+        }
+        document.getElementById("site").addEventListener("click", event => {
+            localStorage.setItem("jpeasy",";;;;;;;;;;;");
+            localStorage.removeItem("jpeasysession","-1");
+            window.location = 'http://jpeasy.ddns.net/main.html';
+        });
+    </script>
+</html>
