@@ -249,36 +249,36 @@
     }
     toreview();
     document.getElementById("addquestions").addEventListener("click", event => {
-      try{
-        jpeasy = localStorage.getItem("jpeasy");
-        jpeasy = jpeasy.split(";");
-        for(i = parseInt(document.getElementById("frommany").value)-1; i < parseInt(document.getElementById("howmany").value); i++) {
-            currentquestion = i.toString();
-            len = currentquestion.length;
-            for(j = 0; j < 4-len; j++) {
-                currentquestion =  "0" + currentquestion;
-            }
-            if(!jpeasy.join(";").includes(currentquestion + "e,")) {
-                jpeasy[0] = jpeasy[0] + currentquestion + "e,";
-            }
-            if(!jpeasy.join(";").includes(currentquestion + "j,")) {
-                jpeasy[0] = jpeasy[0] + currentquestion + "j,";
-            }
-            if(!jpeasy.join(";").includes(currentquestion + "a,")) {
-                jpeasy[0] = jpeasy[0] + currentquestion + "a,";
-            }
-        }
-        jpeasy = jpeasy.join(";");
-        localStorage.setItem("jpeasy", jpeasy);
-        toreview();
+      if(isNaN(parseInt(document.getElementById("frommany").value))) {
+        alert("Please enter only numbers. No questions were added.");
+        return;
       }
-      catch(e) {
-
+      jpeasy = localStorage.getItem("jpeasy");
+      jpeasy = jpeasy.split(";");
+      for(i = parseInt(document.getElementById("frommany").value)-1; i < parseInt(document.getElementById("howmany").value); i++) {
+          currentquestion = i.toString();
+          len = currentquestion.length;
+          for(j = 0; j < 4-len; j++) {
+              currentquestion =  "0" + currentquestion;
+          }
+          if(!jpeasy.join(";").includes(currentquestion + "e,")) {
+              jpeasy[0] = jpeasy[0] + currentquestion + "e,";
+          }
+          if(!jpeasy.join(";").includes(currentquestion + "j,")) {
+              jpeasy[0] = jpeasy[0] + currentquestion + "j,";
+          }
+          if(!jpeasy.join(";").includes(currentquestion + "a,")) {
+              jpeasy[0] = jpeasy[0] + currentquestion + "a,";
+          }
       }
+      jpeasy = jpeasy.join(";");
+      localStorage.setItem("jpeasy", jpeasy);
+      toreview();
     });
     document.getElementById("reset").addEventListener("click", event => {
         localStorage.setItem("jpeasy",";;;;;;;;;;;");
         localStorage.setItem("jpeasysession","-1");
+        toreview();
     });
     document.getElementById("button").addEventListener("click", event => {
       if(localStorage.getItem("jpeasysession")!="9") {
@@ -300,6 +300,7 @@
         }
       }
       if(tws.length == 0) {
+          alert("You had no questions to review! session done!");
           return;
       }
       localStorage.setItem("jpeasytrainingWords",JSON.stringify(tws));
@@ -378,6 +379,7 @@
       }
     }
     document.getElementById("random").addEventListener("click", event => {
+      search(-1);
       loadword(Math.floor(Math.random()*200),0);
       document.getElementById("text0").style.visibility = "visible";
       document.getElementById("translation0").style.visibility = "visible";
