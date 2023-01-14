@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>jpeasy session</title>
@@ -13,6 +13,8 @@
     <div id="text">
       <span id="a"></span><span id="b"></span><span id="c"></span><span id="d"></span><span id="e"></span><span id="f"></span>
     </div>
+    <br><br>
+    <div id="inst"></div>
     <br><br><br>
     <button id="stc">Set to correct</button>
     <br><br>
@@ -108,6 +110,11 @@
     input:focus {
       box-shadow: 0 0 0 .15vw skyblue;
     }
+    #inst{
+      font-size: 1.5vw;
+      text-align: center;
+      color: #888888;
+    }
     @media (max-width: 1000px) {
       #everything {
         width: 90vw;
@@ -131,6 +138,9 @@
       }
       #word{
         font-size:6vw;
+      }
+      #inst{
+        font-size: 3vw;
       }
     }
     </style>
@@ -170,8 +180,10 @@
         if(t=="e") {
           document.getElementById("word").innerHTML = translation;
           document.getElementById("text").style.visibility = "hidden";
+          document.getElementById("inst").innerHTML = "Give the japanese translation without japanese symbols";
         }
         else {
+          document.getElementById("inst").innerHTML = "Give the english translation";
           document.getElementById("text").style.visibility = "visible";
           const alphabet = 'abcdefghijklmnopqrstuvwxyz';
           var text = words.split(";")[ind].split(" ")[0];
@@ -239,6 +251,7 @@
           document.getElementById("text").style.background = "linear-gradient(to top, #0000ff, #ee00ff)";
           if(t=="a") {
             document.getElementById("text").style.background = "#212121";
+            document.getElementById("inst").innerHTML = "Give the accent, for example いいえ -> lhhd (low high high drop)";
           }
         }
       }
@@ -250,11 +263,12 @@
       document.getElementById("stc").addEventListener("click", event => {
         if(document.getElementById("word").innerHTML.includes("Wrong")) {
           wrongs.length = wrongs.length-1;
-          correct.push(trainingWords[tw]);
+          corrects.push(trainingWords[tw]);
+          document.getElementById("word").innerHTML = "Made correct";
         }
       });
       document.getElementById("nq").addEventListener("click", function(event) {
-        if(tw == trainingWords.length && !c) return;
+        if(tw == trainingWords.length && !c) window.location = 'http://jpeasy.ddns.net/main.html';
         if(c) {
           c = false;
           if(tw!=trainingWords.length) {
@@ -293,6 +307,8 @@
             }
             jpeasy = jpeasy.join(";");
             localStorage.setItem("jpeasy",jpeasy);
+            document.getElementById("nq").innerHTML = "Exit";
+            document.getElementById("inst").innerHTML = "";
           }
         }
         else if(trainingWords[tw].charAt(trainingWords[0].length-1)=='e') {
