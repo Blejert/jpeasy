@@ -239,7 +239,7 @@
         tws.push(jpeasy[0].split(",")[i]);
       }
       for(i = 0; i < 10; i++) {
-        if(boxes[i].includes(parseInt(localStorage.getItem("jpeasysession"))+1).toString()) {
+        if(boxes[i].includes(((parseInt(localStorage.getItem("jpeasysession"))+1)%10).toString())) {
           for(j = 0; j < jpeasy[i+1].length/6; j++) {
               tws.push(jpeasy[i+1].split(",")[j]);
           }
@@ -281,12 +281,7 @@
         toreview();
     });
     document.getElementById("button").addEventListener("click", event => {
-      if(localStorage.getItem("jpeasysession")!="9") {
-          localStorage.setItem("jpeasysession",(parseInt(localStorage.getItem("jpeasysession"))+1).toString());
-      }
-      else {
-          localStorage.setItem("jpeasysession","0")
-      }
+      localStorage.setItem("jpeasysession",((parseInt(localStorage.getItem("jpeasysession"))+1)%10).toString());
       tws = [];
       jpeasy = localStorage.getItem("jpeasy").split(";");
       for(i = 0; i < jpeasy[0].length/6; i++) {
