@@ -6,7 +6,7 @@
 <body>
     <div id="everything">
     <br><br>
-    <input type="text" id="testing"></input><button id="nq">next</button>
+    <input type="text" id="testing" placeholder="Write your answer here"></input><button id="nq">next</button>
     <br>
     <span id="word"></span>
     <br><br>
@@ -165,7 +165,8 @@
       function loadword(ind,t) {
         translation = "";
         for(i = 2; i < words.split(";")[ind].split(" ").length; i++) {
-          translation += words.split(";")[ind].split(" ")[i] + " ";
+          translation += words.split(";")[ind].split(" ")[i];
+          translation += i == words.split(";")[ind].split(" ").length-1 ? "" : " ";
         }
         accent = ""
         var lh = words.split(";")[ind].charAt(0)=='^';
@@ -191,7 +192,7 @@
         if(t=="e") {
           document.getElementById("word").innerHTML = translation;
           document.getElementById("text").style.visibility = "hidden";
-          document.getElementById("inst").innerHTML = "Give the japanese translation without japanese symbols";
+          document.getElementById("inst").innerHTML = "Give the japanese translation";
         }
         else {
           document.getElementById("inst").innerHTML = "Give the english translation";
@@ -274,9 +275,17 @@
       var c = false;
       document.getElementById("stc").addEventListener("click", event => {
         if(document.getElementById("word").innerHTML.includes("Wrong")) {
+          corrects.push(wrongs[wrongs.length-1]);
           wrongs.length = wrongs.length-1;
-          corrects.push(trainingWords[tw]);
-          document.getElementById("word").innerHTML = "Made correct";
+          document.getElementById("word").innerHTML = "Made Correct";
+          document.getElementById("stc").innerHTML = "Set to Wrong";
+          return;
+        }
+        if(document.getElementById("word").innerHTML.includes("Correct")) {
+          wrongs.push(corrects[corrects.length-1]);
+          corrects.length = corrects.length-1;
+          document.getElementById("word").innerHTML = "Made Wrong";
+          document.getElementById("stc").innerHTML = "Set to Correct";
         }
       });
       document.getElementById("nq").addEventListener("click", function(event) {
@@ -326,13 +335,14 @@
         else if(trainingWords[tw].charAt(trainingWords[0].length-1)=='e') {
           var gw = words.split(";")[parseInt(trainingWords[tw].replace("e","").replace("j","").replace("a",""))].split(" ")[0].replaceAll("\\","").replaceAll("/","").replaceAll("_","").replaceAll("^","");
           for(j = 0; j < convertfromfrom.length; j++) {
-            gw = gw.replaceAll(convertfromfrom[j], convertfrom[j]);
+            gw2 = gw.replaceAll(convertfromfrom[j], convertfrom[j]);
           }
           for(j = 0; j < convertto.length; j++) {
-            gw = gw.replaceAll(convertfrom[j], convertto[j]);
+            gw2 = gw2.replaceAll(convertfrom[j], convertto[j]);
           }
-          if(gw.includes(document.getElementById("testing").value) && document.getElementById("testing").value.length >= 3 || document.getElementById("testing").value == gw) {
+          if(document.getElementById("testing").value == gw2 || document.getElementById("testing").value == gw) {
             document.getElementById("word").innerHTML = "Correct";
+            document.getElementById("stc").innerHTML = "Set to Wrong";
             corrects.push(trainingWords[tw]);
           }
           else {
@@ -346,6 +356,7 @@
         else if(trainingWords[tw].charAt(trainingWords[0].length-1)=='a') {
           if(document.getElementById("testing").value == accent) {
             document.getElementById("word").innerHTML = "Correct";
+            document.getElementById("stc").innerHTML = "Set to Wrong";
             corrects.push(trainingWords[tw]);
           }
           else {
@@ -357,8 +368,9 @@
           c = true;
         }
         else {
-          if(translation.includes(document.getElementById("testing").value) && document.getElementById("testing").value.length >= 3 || document.getElementById("testing").value == translation) {
+          if(translation.toLowerCase().trim().includes(document.getElementById("testing").value.toLowerCase().trim()) && document.getElementById("testing").value.length >= 3 || document.getElementById("testing").value == translation) {
             document.getElementById("word").innerHTML = "Correct";
+            document.getElementById("stc").innerHTML = "Set to Wrong";
             corrects.push(trainingWords[tw]);
           }
           else {
