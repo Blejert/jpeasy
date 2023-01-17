@@ -155,6 +155,7 @@
         }
         return array;
       }
+      document.getElementById("stc").style.visibility="hidden";
       var corrects = [];
       var wrongs = [];
       var translation;
@@ -292,6 +293,7 @@
         if(tw == trainingWords.length && !c) window.location = 'http://jpeasy.ddns.net/main.html';
         if(c) {
           c = false;
+          document.getElementById("stc").style.visibility="hidden";
           if(tw!=trainingWords.length) {
             loadword(parseInt(trainingWords[tw].replace("e","").replace("j","").replace("a","")),trainingWords[tw].charAt(trainingWords[tw].length-1));
           }
@@ -333,6 +335,7 @@
           }
         }
         else if(trainingWords[tw].charAt(trainingWords[0].length-1)=='e') {
+          document.getElementById("stc").style.visibility="visible";
           var gw = words.split(";")[parseInt(trainingWords[tw].replace("e","").replace("j","").replace("a",""))].split(" ")[0].replaceAll("\\","").replaceAll("/","").replaceAll("_","").replaceAll("^","");
           for(j = 0; j < convertfromfrom.length; j++) {
             gw2 = gw.replaceAll(convertfromfrom[j], convertfrom[j]);
@@ -354,6 +357,7 @@
           c = true;
         }
         else if(trainingWords[tw].charAt(trainingWords[0].length-1)=='a') {
+          document.getElementById("stc").style.visibility="visible";
           if(document.getElementById("testing").value == accent) {
             document.getElementById("word").innerHTML = "Correct";
             document.getElementById("stc").innerHTML = "Set to Wrong";
@@ -368,6 +372,7 @@
           c = true;
         }
         else {
+          document.getElementById("stc").style.visibility="visible";
           if(translation.toLowerCase().trim().includes(document.getElementById("testing").value.toLowerCase().trim()) && document.getElementById("testing").value.length >= 3 || document.getElementById("testing").value == translation) {
             document.getElementById("word").innerHTML = "Correct";
             document.getElementById("stc").innerHTML = "Set to Wrong";
