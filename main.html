@@ -79,6 +79,7 @@
   <span id="translation4"></span>
   <br>
   <span id="wid4"></span>
+  <br>
   </div>
   </div>
   <style>
@@ -313,6 +314,7 @@
       }
       if(tws.length == 0) {
           alert("You had no questions to review! session done!");
+          toreview();
           return;
       }
       localStorage.setItem("jpeasytrainingWords",JSON.stringify(tws));
@@ -381,6 +383,10 @@
             lh = false;
           }
         }
+      }
+      document.getElementById("text"+n).style.background = "linear-gradient(to top, #0000ff, #ee00ff)";
+      if(words.split(";")[ind].split(" ")[0].charAt(words.split(";")[ind].split(" ")[0].length-1)=='^') {
+        document.getElementById("text"+n).style.background = "linear-gradient(to top, #0000ff, #0000ff)";
       }
       for(i = 0; i < 6; i++) {
         if(document.getElementById(alphabet.charAt(i)+n).innerHTML == "") {
