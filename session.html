@@ -262,6 +262,9 @@
             }
           }
           document.getElementById("text").style.background = "linear-gradient(to top, #0000ff, #ee00ff)";
+            if(words.split(";")[ind].split(" ")[0].charAt(words.split(";")[ind].split(" ")[0].length-1)=='^') {
+              document.getElementById("text").style.background = "linear-gradient(to top, #0000ff, #0000ff)";
+            }
           if(t=="a") {
             document.getElementById("text").style.background = "#212121";
             document.getElementById("inst").innerHTML = "Give the accent, for example いいえ -> lhhd (low high high drop)";
