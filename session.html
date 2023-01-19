@@ -340,8 +340,9 @@
         else if(trainingWords[tw].charAt(trainingWords[0].length-1)=='e') {
           document.getElementById("stc").style.visibility="visible";
           var gw = words.split(";")[parseInt(trainingWords[tw].replace("e","").replace("j","").replace("a",""))].split(" ")[0].replaceAll("\\","").replaceAll("/","").replaceAll("_","").replaceAll("^","");
+          gw2 = gw;
           for(j = 0; j < convertfromfrom.length; j++) {
-            gw2 = gw.replaceAll(convertfromfrom[j], convertfrom[j]);
+            gw2 = gw2.replaceAll(convertfromfrom[j], convertfrom[j]);
           }
           for(j = 0; j < convertto.length; j++) {
             gw2 = gw2.replaceAll(convertfrom[j], convertto[j]);
